@@ -20,6 +20,7 @@ type Server struct {
 	Port           int
 	DbUri          string
 	ScreenshotPath string
+	Handler        http.Handler
 }
 
 // NewServer returns a new server intance
@@ -29,7 +30,12 @@ func NewServer(host string, port int, dburi string, screenshotpath string) *Serv
 		Port:           port,
 		DbUri:          dburi,
 		ScreenshotPath: screenshotpath,
+		Handler:        http.FileServer(http.Dir(screenshotpath)),
 	}
+}
+
+func (s *Server) WithHandler(handler http.Handler) {
+	s.Handler = handler
 }
 
 // isJSON sets the Content-Type header to application/json
@@ -84,7 +90,7 @@ func (s *Server) Run() {
 	})
 
 	// screenshot files
-	r.Mount("/screenshots", http.StripPrefix("/screenshots/", http.FileServer(http.Dir(s.ScreenshotPath))))
+	r.Mount("/screenshots", http.StripPrefix("/screenshots/", s.Handler))
 
 	// swagger documentation
 	r.Get("/swagger/*", httpSwagger.Handler(httpSwagger.URL("/swagger/doc.json")))

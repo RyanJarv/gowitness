@@ -25,7 +25,7 @@ type Result struct {
 	ContentLength         int64     `json:"content_length"`
 	HTML                  string    `json:"html"`
 	Title                 string    `json:"title"`
-	PerceptionHash        string    `json:"perception_hash" gorm:"index"`
+	PerceptionHash        string    `json:"perception_hash" gorm:"type:varchar(255);index"`
 	PerceptionHashGroupId uint      `json:"perception_hash_group_id" gorm:"index"`
 	Screenshot            string    `json:"screenshot"`
 
@@ -83,7 +83,7 @@ type Technology struct {
 	ID       uint `json:"id" gorm:"primarykey"`
 	ResultID uint `json:"result_id"`
 
-	Value string `json:"value" gorm:"index"`
+	Value string `json:"value" gorm:"type:varchar(500);index"`
 }
 
 type Header struct {
